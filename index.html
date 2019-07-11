@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="medium">
+            <div class='output-container'>
+              <p>Alerts</p>
+              <div id="output"></div>
+            </div>
+            <div class="btn-container">
+                <button id='rock'>
+                    <i class="fas fa-hand-rock btn-icon"></i>
+                </button>
+                <button id='paper'>
+                    <i class="fas fa-hand-paper btn-icon"></i>
+                </button>
+                <button id='scissors'>
+                    <i class="fas fa-hand-scissors btn-icon"></i>
+                </button>
+            </div>
+        </div>
+      <div class="right">
+        <button id="new-game">
+          <p>Start</p>
+        </button>
+      </div>
+      <div class="left">
+        <div class="result">
+          <table>
+          <tbody>
+             <tr class='result-row'>
+                <td id="player"></td>
+                <td id="computer"></td>
+             </tr>
+             <tr>
+                <td>You</td>
+                <td>Computer</td>
+             </tr>
+          </tbody>
+       </table>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>
