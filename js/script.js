@@ -4,13 +4,14 @@
 var compMove;
 var userMove;
 var howManyRounds;
+var buttons = document.querySelectorAll('.player-move');
 
 
 // Results
 var compResult = document.getElementById('computer');
 var playerResult = document.getElementById('player');
 
-// Buttons
+//Button
 var btn1 = document.getElementById('rock');
 var btn2 = document.getElementById('paper');
 var btn3 = document.getElementById('scissors');
@@ -30,17 +31,14 @@ playerResult.innerHTML = params.playerResult;
 
 buttonDisabled();
 
-btn1.addEventListener('click', function () {
-    playerMove(rock);
-});
 
-btn2.addEventListener('click', function () {
-    playerMove(paper);
-});
 
-btn3.addEventListener('click', function () {
-    playerMove(scissors);
-});
+for (var i = 0; i < buttons.length; i++) {
+    var dataMove = buttons[i].getAttribute('data-move');
+    buttons[i].addEventListener('click', function () {
+        playerMove(dataMove);
+    })
+};
 
 btn4.addEventListener('click', function () {
     newGame();
@@ -66,7 +64,7 @@ function computerMove() {
 
 function alerts(compMove, userMove) {
     switch (userMove) {
-        case rock:
+        case 'rock':
             if (compMove === 'scissors') {
                 output.insertAdjacentHTML('afterBegin', 'You WON!: You played rock, computer played scissors! <br>');
                 params.playerResult++;
@@ -84,7 +82,7 @@ function alerts(compMove, userMove) {
             }
             break;
 
-        case paper:
+        case 'paper':
             if (compMove === 'rock') {
                 output.insertAdjacentHTML('afterBegin', 'You WON!: You played paper, computer played rock!<br>');
                 params.playerResult++;
@@ -102,7 +100,7 @@ function alerts(compMove, userMove) {
             }
             break;
 
-        case scissors:
+        case 'scissors':
             if (compMove === 'paper') {
                 output.insertAdjacentHTML('afterBegin', 'You WON!: You played scissors, computer played paper!<br>');
                 params.playerResult++;
@@ -139,11 +137,11 @@ function newGame() {
     howManyRounds = parseFloat(window.prompt('To how many won rounds we play?'));
     if (howManyRounds != null) {
         output.innerHTML = 'We play into ' + howManyRounds + ' wins!';
+        buttonEnable();
     }
     else {
         output.innerHTML = 'You have to write a number!';
     }
-    buttonEnable();
 };
 
 function resetParameters() {
