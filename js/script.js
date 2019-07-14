@@ -3,27 +3,27 @@
 // General
 var compMove;
 var userMove;
-var howManyRounds;
-var buttons = document.querySelectorAll('.player-move');
-
 
 // Results
 var compResult = document.getElementById('computer');
 var playerResult = document.getElementById('player');
 
 //Button
-var btn1 = document.getElementById('rock');
-var btn2 = document.getElementById('paper');
-var btn3 = document.getElementById('scissors');
-var btn4 = document.getElementById('new-game');
+var btnRock = document.getElementById('rock');
+var btnPaper = document.getElementById('paper');
+var btnScissors = document.getElementById('scissors');
+var btnNewGame = document.getElementById('new-game');
 
 // Outputs
 var output = document.getElementById('output');
+var text = document.getElementById('modalHeader');
 
 // Parameters
+
 var params = {
     compResult: 0,
     playerResult: 0,
+    roundsToWin: 0,
 };
 
 compResult.innerHTML = params.compResult;
@@ -31,7 +31,7 @@ playerResult.innerHTML = params.playerResult;
 
 buttonDisabled();
 
-
+var buttons = document.querySelectorAll('.player-move');
 
 for (var i = 0; i < buttons.length; i++) {
     var dataMove = buttons[i].getAttribute('data-move');
@@ -40,7 +40,7 @@ for (var i = 0; i < buttons.length; i++) {
     })
 };
 
-btn4.addEventListener('click', function () {
+btnNewGame.addEventListener('click', function () {
     newGame();
 });
 
@@ -121,45 +121,80 @@ function alerts(compMove, userMove) {
 };
 
 function buttonDisabled() {
-    btn1.disabled = true;
-    btn2.disabled = true;
-    btn3.disabled = true;
+    btnRock.disabled = true;
+    btnPaper.disabled = true;
+    btnScissors.disabled = true;
 };
 
 function buttonEnable() {
-    btn1.disabled = false;
-    btn2.disabled = false;
-    btn3.disabled = false;
+    btnRock.disabled = false;
+    btnPaper.disabled = false;
+    btnScissors.disabled = false;
 };
 
 function newGame() {
     resetParameters();
-    howManyRounds = parseFloat(window.prompt('To how many won rounds we play?'));
-    if (howManyRounds != null) {
-        output.innerHTML = 'We play into ' + howManyRounds + ' wins!';
-        buttonEnable();
+    params.roundsToWin = window.prompt('How many round would you like to play?');
+    if (params.roundsToWin.length < 1 || NaN) {
+        output.innerHTML = 'Write a number';
     }
     else {
-        output.innerHTML = 'You have to write a number!';
+        output.innerHTML = 'Play till ' + params.roundsToWin + ' won rounds!';
+        buttonEnable();
     }
 };
 
 function resetParameters() {
-    params = {
-        compResult: 0,
-        playerResult: 0,
-    }
-    compResult.innerHTML = params.compResult;
-    playerResult.innerHTML = params.playerResult;
+    params.compResult = 0;
+    params.playerResult = 0;
+    compResult.innerHTML = 0;
+    playerResult.innerHTML = 0;
 };
 
 function winner() {
-    if (params.playerResult === howManyRounds) {
-        output.innerHTML = 'You WON whole game! <br> In order to start new game, click START button';
+    if (params.playerResult == params.roundsToWin) {
+        // output.innerHTML = 'You WON whole game! <br> In order to start new game, click START button';
+        openModal('#progress');
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You WON game! <br><br> In order to start new game, click START button';
         buttonDisabled();
     }
-    else if (params.compResult === howManyRounds) {
-        output.innerHTML = 'You LOSE: computer was better! <br> In order to start new game, click START button';
+    else if (params.compResult == params.roundsToWin) {
+        // output.innerHTML = 'You LOSE: computer was better! <br> In order to start new game, click START button';
+        openModal('#progress');
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You LOSE game! <br><br> In order to start new game, click START button';
         buttonDisabled();
     }
 };
+
+// Funkcja otwierająca modal
+function openModal(modal) {
+    document.querySelectorAll('#overlay > *').forEach(function (modal) {
+        modal.classList.remove('show');
+    })
+    document.querySelector('#overlay').classList.add('show')
+    document.querySelector(modal).classList.add('show')
+
+    if (params.playerResult >= params.roundsToWin) {
+        text.innerHTML = 'YOU WON !!!';
+    }
+    else if (params.compResult >= params.roundsToWin) {
+        text.innerHTML = 'YOU LOST !!!';
+    }
+}
+// Funkcja zamykająca modal
+function closeModal() {
+    document.getElementById('overlay').classList.remove('show');
+}
+// Zamknięcie modala poprzez X
+document.querySelectorAll('#overlay .close').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeModal();
+    })
+})
+// Zamknięcie modala poprzez kliknięcie ESC
+document.addEventListener('keyup', function (e) {
+    if (e.keyCode === 27) {
+        closeModal();
+    }
+})
