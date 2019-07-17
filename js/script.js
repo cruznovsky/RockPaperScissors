@@ -1,7 +1,5 @@
 'use strict';
 
-// General
-var compMove;
 
 // Results
 var compResult = document.getElementById('computer');
@@ -12,6 +10,7 @@ var btnRock = document.getElementById('rock');
 var btnPaper = document.getElementById('paper');
 var btnScissors = document.getElementById('scissors');
 var btnNewGame = document.getElementById('new-game');
+
 
 // Outputs
 var output = document.getElementById('output');
@@ -28,6 +27,9 @@ var params = {
     progress: [],
 };
 
+var roundsNumberValue = document.getElementById('roundsNumberValue');
+var playerName = document.getElementById('playerNameValue');
+
 compResult.innerHTML = params.compResult;
 playerResult.innerHTML = params.playerResult;
 
@@ -43,14 +45,21 @@ buttons.forEach(el => {
 });
 
 btnNewGame.addEventListener('click', function () {
-    newGame();
+    openModal('#startGame');
+
+    var startButton = document.getElementById('startButton');
+
+    startButton.addEventListener('click', function () {
+        params.roundsToWin = roundsNumberValue.value;
+        closeModal();
+        newGame();
+    })
 });
 
 function playerMove(userMove) {
     var compMove = computerMove();
     params.roundNumber++;
     getWinner(userMove, compMove);
-    // gameProgress();
     params.progress.push({
         roundNumber: params.roundNumber,
         userMove: userMove,
@@ -89,8 +98,6 @@ function buttonEnable() {
 
 function newGame() {
     rowRemove();
-    resetParameters();
-    params.roundsToWin = window.prompt('How many round would you like to play?');
     if (params.roundsToWin.length < 1 || NaN) {
         output.innerHTML = 'Write a number';
     }
@@ -101,6 +108,8 @@ function newGame() {
 };
 
 function resetParameters() {
+    playerName.value = '';
+    roundsNumberValue.value = '';
     params.roundNumber = 0;
     params.compResult = 0;
     params.playerResult = 0;
@@ -112,14 +121,17 @@ function resetParameters() {
 function endGame() {
     if (params.playerResult == params.roundsToWin) {
         openModal('#progress');
-        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You WON game! <br><br> In order to start new game, click START button!' + '<br>';
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + playerName.value + ' WON game! <br><br> In order to start new game, click START button!' + '<br>';
         buttonDisabled();
+        resetParameters();
     }
     else if (params.compResult == params.roundsToWin) {
         openModal('#progress');
-        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You LOSE game! <br><br> In order to start new game, click START button!' + '<br>';
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + playerName.value + ' LOSE game! <br><br> In order to start new game, click START button!' + '<br>';
         buttonDisabled();
+        resetParameters();
     }
+
 };
 
 // Funkcja otwierająca modal
@@ -197,33 +209,23 @@ function rowRemove() {
 };
 
 function getWinner(userMove, compMove) {
+
     if (userMove === compMove) {
-        output.insertAdjacentHTML('afterBegin', 'It is draw!: you played ' + userMove + ', computer played the same<br>');
+        output.insertAdjacentHTML('afterBegin', 'It is draw!: ' + playerName.value + ' played ' + userMove + ', computer played the same<br>');
         params.winner = 'DRAW';
     }
     else if ((userMove == 'paper') && (compMove == 'rock') ||
         (userMove == 'rock') && (compMove == 'scissors') ||
         (userMove == 'scissors') && (compMove == 'paper')) {
-        output.insertAdjacentHTML('afterBegin', 'You WON!: You played ' + userMove + ', computer played ' + compMove + '!<br>');
+        output.insertAdjacentHTML('afterBegin', playerName.value + ' WON!: ' + playerName.value + ' played ' + userMove + ', computer played ' + compMove + '!<br>');
         params.playerResult++;
         playerResult.innerHTML = params.playerResult;
-        params.winner = 'Player';
+        params.winner = playerName.value;
     }
     else {
-        output.insertAdjacentHTML('afterBegin', 'You LOSE!: You played ' + userMove + ', computer played ' + compMove + '!<br>');
+        output.insertAdjacentHTML('afterBegin', playerName.value + ' LOSE!: ' + playerName.value + ' played ' + userMove + ', computer played ' + compMove + '!<br>');
         params.compResult++;
         compResult.innerHTML = params.compResult;
         params.winner = 'Computer';
     }
-}
-
-function gameProgress() {
-    params.progress.push({
-        roundNumber: params.roundNumber,
-        userMove: userMove,
-        compResult: params.compResult,
-        compMove: compMove,
-        playerResult: params.playerResult,
-        winner: params.winner,
-    });
 }

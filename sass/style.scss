@@ -185,7 +185,56 @@ table td {
   text-align: center;
 }
 
-.tableOverflow {
-  max-height: 100px;
-  overflow: auto;
+#progress {
+  width: 800px;
+}
+#table {
+  width: 100%;
+}
+.test {
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+#startGame {
+  width: 250px;
+}
+#startGame input {
+  display: block;
+  border-radius: 5px;
+  outline: none;
+}
+#startGame label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.playerName {
+  margin-bottom: 20px;
+}
+
+.roundsNumber {
+  margin-bottom: 15px;
+}
+
+.startButtonWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.startButton {
+  height: 50px;
+  width: 100px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #e89b27;
+  outline: none;
+  cursor: pointer;
+  transition: 0.2s transform ease-in-out;
+}
+
+.startButton:hover {
+  transform: scale(1.1);
 }

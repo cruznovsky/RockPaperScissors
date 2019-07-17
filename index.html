@@ -57,8 +57,8 @@
       <a href="#" class="close">x</a>
       <div class="content">
         <header class='modalHeader' id='modalHeader'></header>
-        <div>
-          <table class='test' id="table">
+        <div class='test'>
+          <table id="table">
             <thead>
               <tr>
                 <th>Round number</th>
@@ -68,10 +68,25 @@
                 <th>Result</th>
               </tr>
             </thead>
-            <tbody class='tableOverflow' id='modalTableBody'>
+            <tbody id='modalTableBody'>
+
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+    <div class="modal" id="startGame">
+      <a href="#" class="close">x</a>
+      <div class="content">
+        <div class='playerName'>
+          <label>Player namer:</label>
+          <input id='playerNameValue' type="text" placeholder='Your name'>
+        </div>
+        <div class='roundsNumber'>
+          <label>Rounds required to win:</label>
+          <input id='roundsNumberValue' type="number" autofocus='true'>
+        </div>
+        <div class='startButtonWrap'><button id='startButton' class='startButton'>START</button></div>
       </div>
     </div>
   </div>
