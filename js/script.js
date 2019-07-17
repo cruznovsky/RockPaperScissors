@@ -2,7 +2,6 @@
 
 // General
 var compMove;
-var userMove;
 
 // Results
 var compResult = document.getElementById('computer');
@@ -17,13 +16,16 @@ var btnNewGame = document.getElementById('new-game');
 // Outputs
 var output = document.getElementById('output');
 var text = document.getElementById('modalHeader');
-
 // Parameters
-
 var params = {
     compResult: 0,
     playerResult: 0,
     roundsToWin: 0,
+    roundNumber: 0,
+    compMove: '',
+    userMove: '',
+    winner: '',
+    progress: [],
 };
 
 compResult.innerHTML = params.compResult;
@@ -33,12 +35,12 @@ buttonDisabled();
 
 var buttons = document.querySelectorAll('.player-move');
 
-for (var i = 0; i < buttons.length; i++) {
-    var dataMove = buttons[i].getAttribute('data-move');
-    buttons[i].addEventListener('click', function () {
-        playerMove(dataMove);
+buttons.forEach(el => {
+    el.addEventListener("click", function () {
+        var e = el.getAttribute("data-move");
+        playerMove(e)
     })
-};
+});
 
 btnNewGame.addEventListener('click', function () {
     newGame();
@@ -46,7 +48,18 @@ btnNewGame.addEventListener('click', function () {
 
 function playerMove(userMove) {
     var compMove = computerMove();
-    alerts(compMove, userMove);
+    params.roundNumber++;
+    getWinner(userMove, compMove);
+    // gameProgress();
+    params.progress.push({
+        roundNumber: params.roundNumber,
+        userMove: userMove,
+        compResult: params.compResult,
+        compMove: compMove,
+        playerResult: params.playerResult,
+        winner: params.winner,
+    });
+    endGame();
 };
 
 function computerMove() {
@@ -59,64 +72,6 @@ function computerMove() {
     }
     else {
         return 'scissors';
-    }
-};
-
-function alerts(compMove, userMove) {
-    switch (userMove) {
-        case 'rock':
-            if (compMove === 'scissors') {
-                output.insertAdjacentHTML('afterBegin', 'You WON!: You played rock, computer played scissors! <br>');
-                params.playerResult++;
-                playerResult.innerHTML = params.playerResult;
-                winner();
-            }
-            else if (compMove === 'rock') {
-                output.insertAdjacentHTML('afterBegin', 'It is draw!: you played rock, computer played the same<br>');
-            }
-            else {
-                output.insertAdjacentHTML('afterBegin', 'You LOSE!: you played rock, computer played paper<br>');
-                params.compResult++;
-                compResult.innerHTML = params.compResult;
-                winner();
-            }
-            break;
-
-        case 'paper':
-            if (compMove === 'rock') {
-                output.insertAdjacentHTML('afterBegin', 'You WON!: You played paper, computer played rock!<br>');
-                params.playerResult++;
-                playerResult.innerHTML = params.playerResult;
-                winner();
-            }
-            else if (compMove === 'paper') {
-                output.insertAdjacentHTML('afterBegin', 'It is draw!: you played paper, computer played the same<br>');
-            }
-            else {
-                output.insertAdjacentHTML('afterBegin', 'You LOSE!: you played paper, computer played scissors<br>');
-                params.compResult++;
-                compResult.innerHTML = params.compResult;
-                winner();
-            }
-            break;
-
-        case 'scissors':
-            if (compMove === 'paper') {
-                output.insertAdjacentHTML('afterBegin', 'You WON!: You played scissors, computer played paper!<br>');
-                params.playerResult++;
-                playerResult.innerHTML = params.playerResult;
-                winner();
-            }
-            else if (compMove === 'scissors') {
-                output.insertAdjacentHTML('afterBegin', 'It is draw!: you played scissors, computer played the same<br>');
-            }
-            else {
-                output.insertAdjacentHTML('afterBegin', 'You LOSE!: you played scissors, computer played rock<br>');
-                params.compResult++;
-                compResult.innerHTML = params.compResult;
-                winner();
-            }
-            break;
     }
 };
 
@@ -133,6 +88,7 @@ function buttonEnable() {
 };
 
 function newGame() {
+    rowRemove();
     resetParameters();
     params.roundsToWin = window.prompt('How many round would you like to play?');
     if (params.roundsToWin.length < 1 || NaN) {
@@ -145,29 +101,30 @@ function newGame() {
 };
 
 function resetParameters() {
+    params.roundNumber = 0;
     params.compResult = 0;
     params.playerResult = 0;
+    params.progress = [];
     compResult.innerHTML = 0;
     playerResult.innerHTML = 0;
 };
 
-function winner() {
+function endGame() {
     if (params.playerResult == params.roundsToWin) {
-        // output.innerHTML = 'You WON whole game! <br> In order to start new game, click START button';
         openModal('#progress');
-        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You WON game! <br><br> In order to start new game, click START button';
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You WON game! <br><br> In order to start new game, click START button!' + '<br>';
         buttonDisabled();
     }
     else if (params.compResult == params.roundsToWin) {
-        // output.innerHTML = 'You LOSE: computer was better! <br> In order to start new game, click START button';
         openModal('#progress');
-        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You LOSE game! <br><br> In order to start new game, click START button';
+        text.innerHTML = params.playerResult + ' - ' + params.compResult + '<br><br>' + 'You LOSE game! <br><br> In order to start new game, click START button!' + '<br>';
         buttonDisabled();
     }
 };
 
 // Funkcja otwierająca modal
 function openModal(modal) {
+
     document.querySelectorAll('#overlay > *').forEach(function (modal) {
         modal.classList.remove('show');
     })
@@ -180,6 +137,7 @@ function openModal(modal) {
     else if (params.compResult >= params.roundsToWin) {
         text.innerHTML = 'YOU LOST !!!';
     }
+    addTable();
 }
 // Funkcja zamykająca modal
 function closeModal() {
@@ -198,3 +156,74 @@ document.addEventListener('keyup', function (e) {
         closeModal();
     }
 })
+
+function addTable() {
+
+    var tbody = document.getElementById('modalTableBody');
+
+    for (var i = 0; i < params.progress.length; i++) {
+
+        var row = document.createElement('tr');
+
+        var roundNumber = document.createElement('td');
+        roundNumber.innerText = params.progress[i].roundNumber;
+
+        var userChoice = document.createElement('td');
+        userChoice.innerText = params.progress[i].userMove;
+
+        var compChoice = document.createElement('td');
+        compChoice.innerText = params.progress[i].compMove;
+
+        var win = document.createElement('td');
+        win.innerText = params.progress[i].winner;
+
+        var result = document.createElement('td');
+        result.innerText = params.progress[i].playerResult + ' - ' + params.progress[i].compResult;
+
+        row.appendChild(roundNumber);
+        row.appendChild(userChoice);
+        row.appendChild(compChoice);
+        row.appendChild(win);
+        row.appendChild(result);
+        tbody.appendChild(row);
+    }
+};
+
+function rowRemove() {
+    var table = document.getElementById('table');
+    for (var i = table.rows.length - 1; i > 0; i--) {
+        table.deleteRow(i);
+    }
+};
+
+function getWinner(userMove, compMove) {
+    if (userMove === compMove) {
+        output.insertAdjacentHTML('afterBegin', 'It is draw!: you played ' + userMove + ', computer played the same<br>');
+        params.winner = 'DRAW';
+    }
+    else if ((userMove == 'paper') && (compMove == 'rock') ||
+        (userMove == 'rock') && (compMove == 'scissors') ||
+        (userMove == 'scissors') && (compMove == 'paper')) {
+        output.insertAdjacentHTML('afterBegin', 'You WON!: You played ' + userMove + ', computer played ' + compMove + '!<br>');
+        params.playerResult++;
+        playerResult.innerHTML = params.playerResult;
+        params.winner = 'Player';
+    }
+    else {
+        output.insertAdjacentHTML('afterBegin', 'You LOSE!: You played ' + userMove + ', computer played ' + compMove + '!<br>');
+        params.compResult++;
+        compResult.innerHTML = params.compResult;
+        params.winner = 'Computer';
+    }
+}
+
+function gameProgress() {
+    params.progress.push({
+        roundNumber: params.roundNumber,
+        userMove: userMove,
+        compResult: params.compResult,
+        compMove: compMove,
+        playerResult: params.playerResult,
+        winner: params.winner,
+    });
+}

@@ -1,6 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Oswald:400,700");
-* { box-sizing: border-box; }
-
 body { background-color: #323639; font-family: "Oswald", sans-serif; margin: 0; }
 
 .wrapper { height: 100vh; display: -ms-flexbox; display: flex; -ms-flex-direction: row; flex-direction: row; -ms-flex-pack: center; justify-content: center; -ms-flex-align: center; align-items: center; }
@@ -34,7 +32,7 @@ body { background-color: #323639; font-family: "Oswald", sans-serif; margin: 0; 
 /* LEFT */
 table { border: 2px solid black; }
 
-table td { padding: 8px; text-transform: uppercase; }
+table td { margin: 0 10px; text-align: center; padding: 8px; text-transform: uppercase; }
 
 .result-row { text-align: center; font-size: 20px; font-weight: bold; }
 
@@ -47,10 +45,12 @@ table td { padding: 8px; text-transform: uppercase; }
 
 .modal.show { display: block; }
 
-.close { position: absolute; right: -9px; top: -10px; padding: 5px; color: #ff9900; text-decoration: none; width: 20px; height: 20px; border: 1px solid black; border-radius: 50%; text-align: center; display: -ms-flexbox; display: flex; -ms-flex-align: center; align-items: center; -ms-flex-pack: center; justify-content: center; cursor: pointer; background-color: #272a2c; color: orange; transition: 0.2s transform ease-in-out; }
+.close { position: absolute; right: -9px; top: -10px; padding: 5px; color: #ff9900; text-decoration: none; width: 10px; height: 10px; border: 1px solid black; border-radius: 50%; text-align: center; display: -ms-flexbox; display: flex; -ms-flex-align: center; align-items: center; -ms-flex-pack: center; justify-content: center; cursor: pointer; background-color: #272a2c; color: orange; transition: 0.2s transform ease-in-out; }
 
 .close:hover { transform: scale(1.1); }
 
-.content { background-color: white; min-height: 30px; padding: 5px 30px; }
+.content { background-colol: white; min-height: 30px; padding: 5px 30px; }
 
-.modalHeader { text-align: center; }
+.modalHeader { margin-bottom: 20px; text-align: center; }
+
+.tableOverflow { max-height: 100px; overflow: auto; }
