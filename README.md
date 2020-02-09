@@ -1,3 +1,3 @@
 # RockPaperScissors
 
-https://cruznovsky.github.io/RockPaperScissors/
+See [demo](https://cruznovsky.github.io/RockPaperScissors/)!
